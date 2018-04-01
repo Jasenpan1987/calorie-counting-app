@@ -1,5 +1,6 @@
 import hh from "hyperscript-helpers";
 import { h } from "virtual-dom";
+import { showFormMsg } from "./update";
 
 const { pre, div, h1, button, form, label, input } = hh(h);
 
@@ -23,7 +24,8 @@ function buttonSet(dispatch) {
 
     button({
       className: "f3 pv2 ph3 bg-light-gray bn dim br1",
-      type: "button"
+      type: "button",
+      onclick: () => dispatch(showFormMsg(false))
     }, "Cancel")
   ])
 }
@@ -41,8 +43,11 @@ function formView(dispatch, model) {
     );
   } else {
     return button(
-      { className: "f3 pv2 ph3 br1 bg-blue white bn" },
-      "Add Meal"
+      {
+        className: "f3 pv2 ph3 br1 bg-blue white bn",
+        onclick: () => dispatch(showFormMsg(true))
+      },
+      "Add Meal",
     );
   }
 }
