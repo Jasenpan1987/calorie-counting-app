@@ -4,6 +4,11 @@ const msgs = {
   SHOW_FORM: "SHOW_FORM",
   MEAL_INPUT: "MEAL_INPUT",
   CALORIE_INPUT: "CALORIE_INPUT",
+  SAVE_MEAL: "SAVE_MEAL",
+};
+
+export function saveMealMsg() {
+  return { type: msgs.SAVE_MEAL };
 }
 
 export function showFormMsg(showForm) {
@@ -64,10 +69,27 @@ function update(msg, model) {
         ...model,
         calories
       };
+
+    case msgs.SAVE_MEAL:
+      return saveMeal(msg, model);
     
     default:
       return model;
   }
+}
+
+function saveMeal(msg, model) {
+  const { nextId, description, calories } = model;
+  const newMeal = { id: nextId, description, calories };
+  const meals = [ ...model.meals, newMeal ];
+  return {
+    ...model,
+    meals,
+    nextId: nextId + 1,
+    description: "",
+    calories: 0,
+    showForm: false
+  };
 }
 
 export default update;
