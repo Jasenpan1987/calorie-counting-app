@@ -1,11 +1,29 @@
+import * as R from "ramda"
+
 const msgs = {
   SHOW_FORM: "SHOW_FORM",
+  MEAL_INPUT: "MEAL_INPUT",
+  CALORIE_INPUT: "CALORIE_INPUT",
 }
 
 export function showFormMsg(showForm) {
   return {
     type: msgs.SHOW_FORM,
     showForm
+  }
+}
+
+export function mealInputMsg(description) {
+  return {
+    type: msgs.MEAL_INPUT,
+    description
+  }
+}
+
+export function calorieInputMsg(calories) {
+  return {
+    type: msgs.CALORIE_INPUT,
+    calories
   }
 }
 
@@ -27,6 +45,24 @@ function update(msg, model) {
         showForm,
         description: "",
         calories: 0
+      };
+    
+    case msgs.MEAL_INPUT:
+      const { description } = msg;
+      return {
+        ...model,
+        description
+      };
+    
+    case msgs.CALORIE_INPUT:
+      // const { calories } = msg;
+      const calories = R.pipe(
+        parseInt,
+        R.defaultTo(0)
+      )(msg.calories);
+      return {
+        ...model,
+        calories
       };
     
     default:

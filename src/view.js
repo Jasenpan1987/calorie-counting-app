@@ -1,16 +1,17 @@
 import hh from "hyperscript-helpers";
 import { h } from "virtual-dom";
-import { showFormMsg } from "./update";
+import { showFormMsg, calorieInputMsg, mealInputMsg } from "./update";
 
-const { pre, div, h1, button, form, label, input } = hh(h);
+const { pre, div, h1, button, form, label, input, oninput } = hh(h);
 
-function fieldSet(labelText, inputValue) {
+function fieldSet(labelText, inputValue, oninput) {
   return div([
     label({ className: "db mb1"}, labelText),
     input({ 
       className: "pa2 input-reset ba w-100 mb2",
       type: "text",
-      value: inputValue
+      value: inputValue,
+      oninput
     })
   ])
 }
@@ -36,8 +37,8 @@ function formView(dispatch, model) {
   if(showForm) {
     return form(
       { className: "w-100 mv2" }, [
-        fieldSet("Meal", description),
-        fieldSet("Calories", calories || ""),
+        fieldSet("Meal", description, e => dispatch(mealInputMsg(e.target.value))),
+        fieldSet("Calories", calories || "", e => dispatch(calorieInputMsg(e.target.value))),
         buttonSet(dispatch)
       ]
     );
