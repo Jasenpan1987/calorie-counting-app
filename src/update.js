@@ -5,7 +5,12 @@ const msgs = {
   MEAL_INPUT: "MEAL_INPUT",
   CALORIE_INPUT: "CALORIE_INPUT",
   SAVE_MEAL: "SAVE_MEAL",
+  DELETE_MEAL: "DELETE_MEAL"
 };
+
+export function deleteMeal(id) {
+  return { type: msgs.DELETE_MEAL, id };
+}
 
 export function saveMealMsg() {
   return { type: msgs.SAVE_MEAL };
@@ -73,6 +78,13 @@ function update(msg, model) {
     case msgs.SAVE_MEAL:
       return saveMeal(msg, model);
     
+    case msgs.DELETE_MEAL:
+      const { id } = msg;
+      const meals = R.filter(meal => meal.id !== id)(model.meals);
+      return {
+        ...model, meals
+      };
+
     default:
       return model;
   }

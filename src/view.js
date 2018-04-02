@@ -1,11 +1,14 @@
 import hh from "hyperscript-helpers";
 import { h } from "virtual-dom";
 import * as R from "ramda";
-import { showFormMsg, calorieInputMsg, mealInputMsg, saveMealMsg } from "./update";
+import {
+  showFormMsg, calorieInputMsg, mealInputMsg,
+  saveMealMsg, deleteMeal
+} from "./update";
 
 const {
   pre, div, h1, button, form, label, input, oninput,
-  table, thead, tbody, tr, td, th
+  table, thead, tbody, tr, td, th, i
 } = hh(h);
 
 
@@ -25,7 +28,9 @@ function mealRow(dispatch, className, meal) {
   return tr({ className }, [
     cell(td, "pa2", meal.description),
     cell(td, "pa2 tr", meal.calories),
-    cell(td, "pa2 tr", []),
+    cell(td, "pa2 tr", [
+      i({ className: "ph1 fa fa-trash-o pointer", onclick: () => dispatch(deleteMeal(meal.id)) })
+    ]),
   ])
 }
 
