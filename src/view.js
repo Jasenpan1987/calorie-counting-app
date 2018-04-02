@@ -3,7 +3,7 @@ import { h } from "virtual-dom";
 import * as R from "ramda";
 import {
   showFormMsg, calorieInputMsg, mealInputMsg,
-  saveMealMsg, deleteMeal
+  saveMealMsg, deleteMealMsg, editMealMsg
 } from "./update";
 
 const {
@@ -29,7 +29,8 @@ function mealRow(dispatch, className, meal) {
     cell(td, "pa2", meal.description),
     cell(td, "pa2 tr", meal.calories),
     cell(td, "pa2 tr", [
-      i({ className: "ph1 fa fa-trash-o pointer", onclick: () => dispatch(deleteMeal(meal.id)) })
+      i({ className: "ph1 fa fa-trash-o pointer", onclick: () => dispatch(deleteMealMsg(meal.id)) }),
+      i({ className: "ph1 fa fa-pencil-square-o pointer", onclick: () => dispatch(editMealMsg(meal.id)) })
     ]),
   ])
 }

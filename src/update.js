@@ -5,10 +5,15 @@ const msgs = {
   MEAL_INPUT: "MEAL_INPUT",
   CALORIE_INPUT: "CALORIE_INPUT",
   SAVE_MEAL: "SAVE_MEAL",
-  DELETE_MEAL: "DELETE_MEAL"
+  DELETE_MEAL: "DELETE_MEAL",
+  EDIT_MEAL: "EDIT_MEAL"
 };
 
-export function deleteMeal(id) {
+export function editMealMsg(editId) {
+  return { type: msgs.EDIT_MEAL, editId }
+}
+
+export function deleteMealMsg(id) {
   return { type: msgs.DELETE_MEAL, id };
 }
 
@@ -37,15 +42,6 @@ export function calorieInputMsg(calories) {
   }
 }
 
-// const initModel = {
-//   description: "",
-//   calories: 0,
-//   showForm: false,
-//   nextId: 0,
-//   editId: null,
-//   meals: []
-// };
-
 function update(msg, model) {
   switch(msg.type) {
     case msgs.SHOW_FORM:
@@ -65,7 +61,6 @@ function update(msg, model) {
       };
     
     case msgs.CALORIE_INPUT:
-      // const { calories } = msg;
       const calories = R.pipe(
         parseInt,
         R.defaultTo(0)
@@ -76,7 +71,12 @@ function update(msg, model) {
       };
 
     case msgs.SAVE_MEAL:
-      return saveMeal(msg, model);
+      const { editId } = model;
+      const updatedModel = editId !== null ?
+        editMeal(msg, model) :
+        saveMeal(msg, model);
+      // return saveMeal(msg, model);
+      return updatedModel;
     
     case msgs.DELETE_MEAL:
       const { id } = msg;
@@ -85,8 +85,41 @@ function update(msg, model) {
         ...model, meals
       };
 
+    case msgs.EDIT_MEAL:
+      const editingId = msg.editId
+      const meal = R.find(meal => meal.id === editingId)(model.meals);
+      const editCalories = meal.calories;
+      const editDescription = meal.description;
+
+      return {
+        ...model,
+        editId: editingId,
+        description: editDescription,
+        calories: editCalories,
+        showForm: true
+      };
+
     default:
       return model;
+  }
+}
+
+function editMeal(msg, model) {
+  const {description, calories, editId } = model;
+  const meals = R.map(meal => {
+    if(meal.id ===editId) {
+      return { ...meal, description, calories };
+    }
+    return meal;
+  })(model.meals);
+
+  return {
+    ...model,
+    editId: null,
+    description: "",
+    showForm: false,
+    calories: 0,
+    meals
   }
 }
 
